@@ -23,22 +23,11 @@ class MyApp extends StatelessWidget {
 class PronunciationPracticePage extends StatelessWidget {
   final PronunciationController controller = Get.put(PronunciationController());
 
-  // List of supported languages (French will be default)
-  final List<Map<String, String>> languages = [
-    {'name': 'English', 'code': 'en_US'},
-    {'name': 'Français', 'code': 'fr_FR'},
-  ];
-
   // List of difficulty levels
   final List<String> levels = ['Beginner/Débutant', 'Intermediate/Intermédiaire', 'Advanced/Avancé'];
 
-  String? _selectedLanguage; // Track selected language
-  String? _selectedLevel; // Track selected level
-
-  PronunciationPracticePage() {
-    // _selectedLanguage = languages[1]['code']; // Default to French
-    _selectedLevel = levels[0]; // Default to Beginner
-  }
+  // Observable for selected level
+  RxString _selectedLevel = 'Beginner/Débutant'.obs; // Default to Beginner
 
   @override
   Widget build(BuildContext context) {
@@ -47,51 +36,26 @@ class PronunciationPracticePage extends StatelessWidget {
         any: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // // Language Dropdown
-            // DropdownButton<String>(
-            //   value: _selectedLanguage,
-            //   icon: Icon(
-            //     Icons.language,
-            //     color: _selectedLanguage == 'fr_FR' ? Colors.blue : Colors.white,
-            //   ),
-            //   underline: const SizedBox(),
-            //   onChanged: (String? value) {
-            //     if (value != null) {
-            //       _selectedLanguage = value;
-            //       var locale = value == 'fr_FR' ? Locale('fr', 'FR') : Locale('en', 'US');
-            //       Get.updateLocale(locale);
-            //     }
-            //   },
-            //   items: languages.map((Map<String, String> lang) {
-            //     return DropdownMenuItem<String>(
-            //       value: lang['code'],
-            //       child: Text(
-            //         lang['name']!,
-            //         style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-            //       ),
-            //     );
-            //   }).toList(),
-            // ),
             // Level Dropdown
-            DropdownButton<String>(
-              value: _selectedLevel,
-              underline: const SizedBox(),
-              onChanged: (String? value) {
-                if (value != null) {
-                  _selectedLevel = value;
-                  controller.updateLevel(_selectedLevel!);
-                }
-              },
-              items: levels.map((String level) {
-                return DropdownMenuItem<String>(
-                  value: level,
-                  child: Text(
-                    level,
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-                  ),
-                );
-              }).toList(),
-            ),
+            Obx(() => DropdownButton<String>(
+                  value: _selectedLevel.value,
+                  underline: const SizedBox(),
+                  onChanged: (String? value) {
+                    if (value != null) {
+                      _selectedLevel.value = value;
+                      controller.updateLevel(_selectedLevel.value);
+                    }
+                  },
+                  items: levels.map((String level) {
+                    return DropdownMenuItem<String>(
+                      value: level,
+                      child: Text(
+                        level,
+                        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                      ),
+                    );
+                  }).toList(),
+                )),
           ],
         ),
       ),
@@ -153,18 +117,6 @@ class PronunciationPracticePage extends StatelessWidget {
               minimumSize: const Size(double.infinity, 50),
             ),
           ),
-          // const SizedBox(height: 20),
-          // // Button to see correct pronunciation
-          // ElevatedButton.icon(
-          //   onPressed: () {
-          //     controller.listenForPronunciation();
-          //   },
-          //   icon: const Icon(Icons.visibility),
-          //   label: const Text('See Correct Pronunciation'),
-          //   style: ElevatedButton.styleFrom(
-          //     minimumSize: const Size(double.infinity, 50),
-          //   ),
-          // ),
           const SizedBox(height: 20),
           // Display the correct pronunciation
           Obx(() => Card(
@@ -226,3 +178,4 @@ class PronunciationPracticePage extends StatelessWidget {
     );
   }
 }
+

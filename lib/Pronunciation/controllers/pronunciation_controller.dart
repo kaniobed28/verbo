@@ -9,7 +9,7 @@ class PronunciationController extends GetxController {
   var correctPronunciation = ''.obs;
   var isListening = false.obs;
   var speechRate = 1.0.obs;
-  var selectedLevel = 'Beginner';
+  var selectedLevel = 'Beginner/Débutant';
 
   FlutterTts flutterTts = FlutterTts(); // TTS instance
   stt.SpeechToText speechToText = stt.SpeechToText(); // Speech recognition instance

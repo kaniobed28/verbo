@@ -286,13 +286,13 @@ Statement getStatementByIndex(String level, {int? index}) {
   List<Statement> statements;
 
   switch (level) {
-    case 'Beginner':
+    case 'Beginner/Débutant':
       statements = beginnerStatements;
       break;
-    case 'Intermediate':
+    case 'Intermediate/Intermédiaire':
       statements = intermediateStatements;
       break;
-    case 'Advanced':
+    case 'Advanced/Avancé':
       statements = advancedStatements;
       break;
     default:
